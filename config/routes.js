@@ -80,6 +80,10 @@ module.exports = function(app, passport, auth) {
     var servers = require('../app/controllers/servers.js');
     app.get('/servers', servers.all);
     app.post('/servers', servers.create);
+    app.put('/servers/:serverId', servers.update);
+    app.del('/servers/:serverId', servers.delete);
+
+    app.param('serverId', servers.server);
 
 
     // Home route

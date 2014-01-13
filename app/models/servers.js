@@ -53,4 +53,13 @@ Servers.path('title').validate(function(title) {
     return typeof title === 'string' && title.length > 0;
 }, 'Title cannot be blank');
 
+/**
+ * Statics
+ */
+Servers.statics.load = function(id, cb) {
+    this.findOne({
+        _id: id
+    }).populate('user', 'name username').exec(cb);
+};
+
 mongoose.model('Servers', Servers);

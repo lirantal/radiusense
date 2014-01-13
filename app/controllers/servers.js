@@ -8,6 +8,18 @@ var mongoose = require('mongoose'),
     _ = require('lodash');
 
 /**
+ * Find server by id
+ */
+exports.server = function(req, res, next, id) {
+    Servers.load(id, function(err, server) {
+        if (err) return next(err);
+        if (!server) return next(new Error('Failed to load server ' + id));
+        req.server = server;
+        next();
+    });
+};
+
+/**
  * Create a radius dashboard instance
  */
 exports.create = function(req, res) {
@@ -23,6 +35,45 @@ exports.create = function(req, res) {
     });
 };
 
+/**
+ * Update a radius dashboard instance
+ */
+exports.update = function(req, res) {
+    var server = req.server;
+
+    server = _.extend(server, req.body);
+
+    server.save(function(err) {
+        if (err) {
+            return res.send('users/signup', {
+                errors: err.errors,
+                server: server
+            });
+        } else {
+            res.jsonp(server);
+        }
+    });
+};
+
+/**
+ * Delete a radius dashboard instance
+ */
+exports.delete = function(req, res) {
+    var server = req.server;
+
+    server = _.extend(server, req.body);
+
+    server.remove(function(err) {
+        if (err) {
+            return res.send('users/signup', {
+                errors: err.errors,
+                server: server
+            });
+        } else {
+            res.jsonp(server);
+        }
+    });
+};
 
 /**
  * List of Articles
