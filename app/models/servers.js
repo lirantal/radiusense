@@ -15,6 +15,10 @@ var Servers = new Schema({
         type: Date,
         default: Date.now
     },
+    updated: {
+        type: Date,
+        default: Date.now
+    },
     title: {
         type: String,
         default: '',
@@ -45,6 +49,13 @@ var Servers = new Schema({
     }
 });
 
+/**
+ * Hooking a pre save middleware
+ */
+Servers.pre('save', function(next) {
+  this.updated = new Date;
+  next();
+});
 
 /**
  * Validations
