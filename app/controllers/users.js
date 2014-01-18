@@ -5,6 +5,7 @@
  */
 var mongoose = require('mongoose'),
     User = mongoose.model('User');
+var flash = require('connect-flash');
 
 /**
  * Auth callback
@@ -14,7 +15,7 @@ exports.authCallback = function(req, res) {
 };
 
 /**
- * Show login form
+ * Show signin form
  */
 exports.signin = function(req, res) {
     res.render('users/signin', {
@@ -34,11 +35,11 @@ exports.signup = function(req, res) {
 };
 
 /**
- * Logout
+ * Signout
  */
 exports.signout = function(req, res) {
     req.logout();
-    res.redirect('/');
+    res.redirect('/users/signin');
 };
 
 /**

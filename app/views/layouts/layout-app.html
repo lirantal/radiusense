@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include '../includes/header.html' %}
+
+  <body>
+
+  {% include '../includes/navbar-top.html' %}
+
+    <!-- Main content starts -->
+    <div class="content">
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-dropdown"><a href="#">Navigation</a></div>
+
+            <div class="sidebar-inner">
+              <!--- Sidebar navigation -->
+              {% include '../includes/navbar-side.html' %}
+            </div>
+
+        </div>
+
+        <!-- Sidebar ends -->
+
+        <!-- Main bar -->
+        {% block content %}
+        {% endblock %}
+       <!-- Mainbar ends -->        
+
+       <div class="clearfix"></div>
+
+    </div>
+    <!-- Content ends -->
+
+    {% block assets_footer_pre %}
+    {% endblock %}
+
+    {% include '../includes/footer.html' %}
+
+    {% block assets_footer_post %}
+    {% endblock %}
+
+  </body>
+</html>

@@ -2,6 +2,7 @@
 
 // User routes use users controller
 var users = require('../controllers/users');
+var flash = require('connect-flash');
 
 // User authorization helpers
 var hasAuthorization = function(req, res, next) {
@@ -13,22 +14,25 @@ var hasAuthorization = function(req, res, next) {
 
 module.exports = function(app, passport) {
 
-    app.get('/signin', users.signin);
-    app.get('/signup', users.signup);
-    app.get('/signout', users.signout);
-    app.get('/users/me', users.me);
+    // User sign-in
+    app.get('/users/signin', users.signin);
+    // User sign-in action - setting the local strategy route
+    app.post('/users/signin', passport.authenticate('local', {
+        failureRedirect: '/users/signin',
+        failureFlash: true
+    }), users.session);
+    
+    // User sign-out
+    app.get('/users/signout', users.signout);
 
-    // Setting up the users api
-    app.post('/users', users.create);
+    // User sign-up
+    app.get('/users/signup', users.signup);
+    app.post('/users/signup', users.create);
+
+    app.get('/users/me', users.me);
 
     // Setting up the userId param
     app.param('userId', users.user);
-
-    // Setting the local strategy route
-    app.post('/users/session', passport.authenticate('local', {
-        failureRedirect: '/signin',
-        failureFlash: true
-    }), users.session);
 
     // Setting the facebook oauth routes
     app.get('/auth/facebook', passport.authenticate('facebook', {
