@@ -11,6 +11,11 @@ module.exports = function(app, passport) {
     app.put('/servers/:serverId', servers.update);
     app.del('/servers/:serverId', servers.delete);
 
+    // Servers administration pages
+    app.get('/admin/servers', function(req, res, next) {
+    	res.render('servers/admin');
+    });
+
     app.param('serverId', servers.server);
 
 };
