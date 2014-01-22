@@ -28,13 +28,13 @@ exports.create = function(req, res) {
   
     // Make sure the user has already at least one entry in the database
     // and if so then we don't allow them to create another server instance
-    Servers.findOne({"user" : req.user.id}).exec(function(err, server) {
+    Servers.findOne({"user" : req.user.id}).exec(function(err, serverFound) {
         if (err)
             res.jsonp(
                 500,
                 {"error" : "unable to fetch database records"}
             );
-        else if (server) {
+        else if (serverFound) {
             res.jsonp(
                 500,
                 {"error" : "you are only allowed to create one server instance"}
