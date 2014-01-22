@@ -13,7 +13,9 @@ module.exports = function(app, passport) {
 
     // Servers administration pages
     app.get('/admin/servers', function(req, res, next) {
-    	res.render('servers/admin');
+    	res.render('servers/admin', {
+    		navServers: true
+    	});
     });
 
     app.param('serverId', servers.server);

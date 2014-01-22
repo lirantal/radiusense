@@ -71,7 +71,7 @@
                           <div class="form-group">
                             <label class="control-label col-lg-3" for="port">RADIUS Server Port</label>
                             <div class="col-lg-6">
-                              <input type="text" class="form-control" id="port" ng-model="server.radius.port" name="port">
+                              <input type="number" min="1" max="65535" class="form-control" id="port" ng-model="server.radius.port" name="port">
                             </div>
                           </div>
                           <!-- Telephone -->
