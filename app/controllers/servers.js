@@ -26,11 +26,28 @@ exports.create = function(req, res) {
     var server = new Servers(req.body);
     server.user = req.user;
   
-    server.save(function(err) {
-        if (err) {
-            res.jsonp({'error': 'something bad happened'});
+    // Make sure the user has already at least one entry in the database
+    // and if so then we don't allow them to create another server instance
+    console.log(req.user);
+    Servers.findOne({"user" : req.user.id}).exec(function(err, server) {
+        if (err)
+            res.jsonp(
+                500,
+                {"error" : "unable to fetch database records"}
+            );
+        else if (server) {
+            res.jsonp(
+                500,
+                {"error" : "you are only allowed to create one server instance"}
+            );
         } else {
-            res.jsonp(server);
+            server.save(function(err) {
+                if (err) {
+                    res.jsonp({'error': 'something bad happened'});
+                } else {
+                    res.jsonp(server);
+                }
+            });
         }
     });
 };
