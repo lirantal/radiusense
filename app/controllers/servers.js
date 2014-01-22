@@ -77,9 +77,10 @@ exports.delete = function(req, res) {
 
 /**
  * List of Servers
+ * @todo for the time being return only one configured server
  */
 exports.all = function(req, res) {
-    Servers.find().sort('-created').populate('user', 'name username').exec(function(err, dashboards) {
+    Servers.findOne().sort('-created').populate('user', 'name username').exec(function(err, dashboards) {
         if (err) {
             res.render('error', {
                 status: 500
