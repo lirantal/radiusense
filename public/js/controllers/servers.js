@@ -1,18 +1,30 @@
 var servers = angular.module('servers', []);
 
 function serversController($scope, $http) {
-	$scope.server = {};
 
-	// Get all servers on page load
+	// Set default server object structure
+	$scope.server = {
+		title: "",
+		radius: {
+			address: "",
+			port: "",
+			secret: ""
+		}
+	};
+
+	//Get all servers on page load
 	$http.get('/servers')
 		.success(function(data) {
-			$scope.server = data;
+			// Validate data before we popuplate our bounded object
+			if (data && typeof data == "object") {
+				$scope.server = data;
+			}
 		})
 		.error(function(data) {
 			console.log('Error: ' + data);
 		});
 
-	$scope.createServer = function() {
+	$scope.createServer = function(serverId) {
 
 		// Prepare request to create or update 
 		var body = {
@@ -24,12 +36,26 @@ function serversController($scope, $http) {
 			}
 		};
 
-		$http.post('/servers', body)
-			.success(function(data) {
-				$scope.server = data;
-			})
-			.error(function(data) {
-				console.log('Error: ' + data);
-			})
+		// If this is a new RADIUS server instance then the serverId parameter
+		// will not be defined and we can issue a POST
+		if (!serverId) {
+			// Create a new RADIUS server instance
+			$http.post('/servers', body)
+				.success(function(data) {
+					$scope.server = data;
+				})
+				.error(function(data) {
+					console.log('Error: ' + data);
+				})
+			} else {
+				// Update existing RADIUS server instance
+				$http.put('/servers/' + serverId, body)
+				.success(function(data) {
+					$scope.server = data;
+				})
+				.error(function(data) {
+					console.log('Error: ' + data);
+				})
+			}
 	};
 }
