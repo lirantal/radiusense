@@ -1,23 +1,23 @@
 {% extends '../layouts/layout-app.html' %}
 
 {% block content %}
-<div class="mainbar">
+<div class="mainbar" ng-app="servers" ng-controller="serversController">
       
 	    <!-- Page heading -->
 	    <div class="page-head">
         <!-- Page heading -->
-	      <h2 class="pull-left">Profile
+	      <h2 class="pull-left">RADIUS Server Configuration
           <!-- page meta -->
-          <span class="page-meta">Something Goes Here</span>
+          <span class="page-meta">Configure your remote RADIUS server access information</span>
         </h2>
 
 
         <!-- Breadcrumb -->
         <div class="bread-crumb pull-right">
-          <a href="index.html"><i class="icon-home"></i> Home</a> 
+          <a href="/"><i class="icon-home"></i> Home</a> 
           <!-- Divider -->
           <span class="divider">/</span> 
-          <a href="#" class="bread-current">Profile</a>
+          <a href="/admin/servers" class="bread-current">Servers</a>
         </div>
 
         <div class="clearfix"></div>
@@ -38,7 +38,7 @@
 
               <div class="widget wred">
                 <div class="widget-head">
-                  <div class="pull-left">Profile</div>
+                  <div class="pull-left">RADIUS Server</div>
                   <div class="widget-icons pull-right">
                     <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
                     <a href="#" class="wclose"><i class="icon-remove"></i></a>
@@ -50,86 +50,48 @@
                   <div class="padd">
                     
                     <!-- Profile form -->
-                   
-                                    <div class="form profile">
-                                      <!-- Edit profile form (not working)-->
-                                      <form class="form-horizontal">
-                                          <!-- Name -->
-                                          <div class="form-group">
-                                            <label class="control-label col-lg-3" for="name1">Name</label>
-                                            <div class="col-lg-6">
-                                              <input type="text" class="form-control" id="name1">
-                                            </div>
-                                          </div>   
-                                          <!-- Email -->
-                                          <div class="form-group">
-                                            <label class="control-label col-lg-3" for="email1">Email</label>
-                                            <div class="col-lg-6">
-                                              <input type="text" class="form-control" id="email1">
-                                            </div>
-                                          </div>
-                                          <!-- Telephone -->
-                                          <div class="form-group">
-                                            <label class="control-label col-lg-3" for="telephone">Telephone</label>
-                                            <div class="col-lg-6">
-                                              <input type="text" class="form-control" id="telephone">
-                                            </div>
-                                          </div>  
-                                          <!-- Address -->
-                                          <div class="form-group">
-                                            <label class="control-label col-lg-3" for="address">Address</label>
-                                            <div class="col-lg-6">
-                                              <textarea class="form-control" id="address"></textarea>
-                                            </div>
-                                          </div>
-                                          <!-- State -->
-                                          <div class="form-group">
-                                            <label class="control-label col-lg-3" for="city">State</label>
-                                            <div class="col-lg-6">
-                                              <input type="text" class="form-control" id="state">
-                                            </div>
-                                          </div>                                               
-                                          <!-- City -->
-                                          <div class="form-group">
-                                            <label class="control-label col-lg-3" for="city">City</label>
-                                            <div class="col-lg-6">
-                                              <input type="text" class="form-control" id="city">
-                                            </div>
-                                          </div>                                                                                                                                         
-                                          <!-- Username -->
-                                          <div class="form-group">
-                                            <label class="control-label col-lg-3" for="username2">Username</label>
-                                            <div class="col-lg-6">
-                                              <input type="text" class="form-control" id="username2">
-                                            </div>
-                                          </div>
-                                          <!-- Password -->
-                                          <div class="form-group">
-                                            <label class="control-label col-lg-3" for="password2">Password</label>
-                                            <div class="col-lg-6">
-                                              <input type="password" class="form-control" id="password2">
-                                            </div>
-                                          </div>
-                                          <!-- Checkbox -->
-                                          <div class="form-group">
-                                             <div class="col-lg-6 col-lg-offset-1">
-												
-                                                <label class="checkbox inline">
-                                                   <input type="checkbox" id="inlineCheckbox3" value="agree"> Agree with Terms and Conditions
-                                                </label>
-                                             </div>
-                                          </div> 
-                                          
-                                          <!-- Buttons -->
-                                          <div class="form-group">
-                                             <!-- Buttons -->
-											 <div class="col-lg-6 col-lg-offset-1">
-												<button type="submit" class="btn btn-success">Update</button>
-												<button type="reset" class="btn btn-default">Reset</button>
-											</div>
-                                          </div>
-                                      </form>
-                                    </div>
+   
+                    <div class="form profile">
+                      <!-- Edit profile form (not working)-->
+                      <form class="form-horizontal" ng-submit="createServer()">
+                          <!-- Name -->
+                          <div class="form-group">
+                            <label class="control-label col-lg-3" for="name">Title</label>
+                            <div class="col-lg-6">
+                              <input type="text" class="form-control" id="name" ng-model="server.title" name="title">
+                            </div>
+                          </div>   
+                          <!-- Email -->
+                          <div class="form-group">
+                            <label class="control-label col-lg-3" for="email">RADIUS Server Address</label>
+                            <div class="col-lg-6">
+                              <input type="text" class="form-control" id="email" ng-model="server.radius.address" name="address">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-lg-3" for="port">RADIUS Server Port</label>
+                            <div class="col-lg-6">
+                              <input type="text" class="form-control" id="port" ng-model="server.radius.port" name="port">
+                            </div>
+                          </div>
+                          <!-- Telephone -->
+                          <div class="form-group">
+                            <label class="control-label col-lg-3" for="secret">RADIUS Shared Secret</label>
+                            <div class="col-lg-6">
+                              <input type="text" class="form-control" id="secret" ng-model="server.radius.secret" name="secret">
+                            </div>
+                          </div>  
+
+                          <!-- Buttons -->
+                          <div class="form-group">
+                             <!-- Buttons -->
+							 <div class="col-lg-6 col-lg-offset-1">
+								<button type="submit" class="btn btn-success">Update</button>
+								<button type="reset" class="btn btn-default">Reset</button>
+							</div>
+                          </div>
+                      </form>
+                    </div>
 
                   </div>
                 </div>
