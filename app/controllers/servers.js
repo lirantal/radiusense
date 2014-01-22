@@ -28,7 +28,6 @@ exports.create = function(req, res) {
   
     // Make sure the user has already at least one entry in the database
     // and if so then we don't allow them to create another server instance
-    console.log(req.user);
     Servers.findOne({"user" : req.user.id}).exec(function(err, server) {
         if (err)
             res.jsonp(
@@ -43,7 +42,7 @@ exports.create = function(req, res) {
         } else {
             server.save(function(err) {
                 if (err) {
-                    res.jsonp({'error': 'something bad happened'});
+                    res.jsonp({"error": "unable to save server entry"});
                 } else {
                     res.jsonp(server);
                 }
@@ -62,10 +61,10 @@ exports.update = function(req, res) {
 
     server.save(function(err) {
         if (err) {
-            return res.send('users/signup', {
-                errors: err.errors,
-                server: server
-            });
+            return res.jsonp(
+                500,
+                {"error": err.message}
+            );
         } else {
             res.jsonp(server);
         }
@@ -82,10 +81,10 @@ exports.delete = function(req, res) {
 
     server.remove(function(err) {
         if (err) {
-            return res.send('users/signup', {
-                errors: err.errors,
-                server: server
-            });
+            return res.jsonp(
+                500,
+                {"error": err.message}
+            );
         } else {
             res.jsonp(server);
         }
@@ -99,9 +98,10 @@ exports.delete = function(req, res) {
 exports.all = function(req, res) {
     Servers.findOne({"user" : req.user.id}).sort('-created').populate('user', 'name username').exec(function(err, dashboards) {
         if (err) {
-            res.render('error', {
-                status: 500
-            });
+            return res.jsonp(
+                500,
+                {"error": err.message}
+            );
         } else {
             res.jsonp(dashboards);
         }
