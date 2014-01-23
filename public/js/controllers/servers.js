@@ -21,7 +21,10 @@ function serversController($scope, $http) {
 			}
 		})
 		.error(function(data) {
-			console.log('Error: ' + data);
+			$scope.message = {
+				status: "warning",
+				info: data
+			};
 		});
 
 	$scope.createServer = function(serverId) {
@@ -45,16 +48,26 @@ function serversController($scope, $http) {
 					$scope.server = data;
 				})
 				.error(function(data) {
-					console.log('Error: ' + data);
+					$scope.message = {
+						status: "warning",
+						info: data
+					};
 				})
 			} else {
 				// Update existing RADIUS server instance
 				$http.put('/servers/' + serverId, body)
 				.success(function(data) {
 					$scope.server = data;
+					$scope.message = {
+						status: "success",
+						info: "Settings updated!"
+					};
 				})
 				.error(function(data) {
-					console.log('Error: ' + data);
+					$scope.message = {
+						status: "warning",
+						info: data
+					};
 				})
 			}
 	};

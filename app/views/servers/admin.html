@@ -32,6 +32,12 @@
 	    <div class="matter">
         <div class="container">
 
+          {% raw %}
+          <div class="alert alert-{{ message.status }}" ng-show="message">
+            {{ message.info }}
+          </div>
+          {% endraw %}
+
           <div class="row">
 
             <div class="col-md-12">
