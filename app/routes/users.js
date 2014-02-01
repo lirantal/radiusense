@@ -3,6 +3,7 @@
 // User routes use users controller
 var users = require('../controllers/users');
 var flash = require('connect-flash');
+var authorization = require('./middlewares/authorization');
 
 // User authorization helpers
 var hasAuthorization = function(req, res, next) {
@@ -15,7 +16,7 @@ var hasAuthorization = function(req, res, next) {
 module.exports = function(app, passport) {
 
     // User sign-in
-    app.get('/users/signin', users.signin);
+    app.get('/users/signin', authorization.requiresAnonymous, users.signin);
     // User sign-in action - setting the local strategy route
     app.post('/users/signin', passport.authenticate('local', {
         failureRedirect: '/users/signin',
@@ -26,8 +27,8 @@ module.exports = function(app, passport) {
     app.get('/users/signout', users.signout);
 
     // User sign-up
-    app.get('/users/signup', users.signup);
-    app.post('/users/signup', users.create);
+    app.get('/users/signup', authorization.requiresAnonymous, users.signup);
+    app.post('/users/signup', authorization.requiresAnonymous, users.create);
 
     app.get('/users/me', users.me);
 
