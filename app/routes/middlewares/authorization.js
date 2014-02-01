@@ -28,4 +28,4 @@ exports.requiresAnonymous = function(req, res, next) {
     }
 
     next();
-}
+};
