@@ -7,6 +7,19 @@ var mongoose = require('mongoose'),
     User = mongoose.model('User');
 var flash = require('connect-flash');
 
+
+var loggedIn = function(req, res) {
+
+    // If user is authenticated, redirect back to referering URL
+    if (req.isAuthenticated()) {
+        var httpReferrer = req.get('Referrer');
+        if (httpReferrer && httpReferrer.length > 0)
+            res.redirect(httpReferrer);
+        else
+            res.redirect('/');
+    }
+}
+
 /**
  * Auth callback
  */
@@ -18,6 +31,10 @@ exports.authCallback = function(req, res) {
  * Show signin form
  */
 exports.signin = function(req, res) {
+
+    // Make sure the user is logged-in and do not render the page in this case
+    loggedIn(req, res);
+
     res.render('users/signin', {
         title: 'Signin',
         message: req.flash('error')
@@ -28,6 +45,10 @@ exports.signin = function(req, res) {
  * Show sign up form
  */
 exports.signup = function(req, res) {
+
+    // Make sure the user is logged-in and do not render the page in this case
+    loggedIn(req, res);
+
     res.render('users/signup', {
         title: 'Sign up',
         user: new User()
