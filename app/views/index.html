@@ -120,7 +120,6 @@
 
           </div>
           <!-- Dashboard graph ends -->
-
         </div>
       </div>
     </div>
@@ -131,6 +130,7 @@
 
 <script type="text/javascript">
   window.user = {{user()}};
+  window.serverId = '{{ server._id | safe }}';
 </script>
 
 <!-- Script for this page -->
@@ -141,7 +141,7 @@ $(document).ready(function(){
   getAccountingRequests();
   function getAccountingRequests() {
     $.ajax({
-      url: "/statistics/freeradius/accountingRequests/52e04d573b8972f02babf541",
+      url: "/statistics/freeradius/accountingRequests/" + window.serverId,
       type: "GET",
       cache: false
     }).success(function (data) {
@@ -228,7 +228,7 @@ $(document).ready(function(){
   getAccessRequests();
   function getAccessRequests() {
     $.ajax({
-      url: "/statistics/freeradius/accessRequests/52e04d573b8972f02babf541",
+      url: "/statistics/freeradius/accessRequests/" + window.serverId,
       type: "GET",
       cache: false
     }).success(function (data) {

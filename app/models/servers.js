@@ -73,4 +73,10 @@ Servers.statics.load = function(id, cb) {
     }).populate('user', 'name username').exec(cb);
 };
 
+Servers.statics.loadSingle = function(userId, cb) {
+    this.findOne({
+        user: userId
+    }).populate('user', 'name username').exec(cb);
+};
+
 mongoose.model('Servers', Servers);
