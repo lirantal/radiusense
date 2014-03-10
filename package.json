@@ -37,7 +37,8 @@
         "grunt": "latest",
         "grunt-cli": "latest",
         "grunt-env": "latest",
-        "forever": "latest"
+        "forever": "latest",
+        "radius": "*"
     },
     "devDependencies": {
         "supertest": "latest",
