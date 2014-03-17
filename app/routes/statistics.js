@@ -13,7 +13,7 @@ module.exports = function(app, passport) {
 
     // FreeRADIUS access and accounting requests 
     app.get('/statistics/freeradius/accessRequests/:serverId', statistics.freeradiusWeeklyAccessRequests);
-    app.get('/statistics/freeradius/accountingRequests/:serverId', statistics.freeradiusWeeklyaccountingRequests);
+    app.get('/statistics/freeradius/accountingRequests/:serverId', statistics.freeradiusWeeklyAccountingRequests);
     
 
 };

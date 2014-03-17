@@ -48,7 +48,7 @@ exports.freeradiusUptime = function(req, res) {
 
 
 
-exports.freeradiusWeeklyaccountingRequests = function(req, res) {
+exports.freeradiusWeeklyAccountingRequests = function(req, res) {
 
     var _data = {};
 
