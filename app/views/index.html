@@ -310,17 +310,17 @@ $(document).ready(function(){
 
     var accessRequests = [];
     data.accessRequests.forEach(function(dataPoint) {
-      accessRequests.push([dataPoint._id, dataPoint.max]);
+      accessRequests.push([new Date(dataPoint._id).getTime(), dataPoint.max]);
     });
 
     var accessAccepts = [];
     data.accessAccepts.forEach(function(dataPoint) {
-      accessAccepts.push([dataPoint._id, dataPoint.max]);
+      accessAccepts.push([new Date(dataPoint._id).getTime(), dataPoint.max]);
     });
 
     var accessRejects = [];
     data.accessRejects.forEach(function(dataPoint) {
-      accessRejects.push([dataPoint._id, dataPoint.max]);
+      accessRejects.push([new Date(dataPoint._id).getTime(), dataPoint.max]);
     });
 
     var dataset = [
@@ -344,7 +344,12 @@ $(document).ready(function(){
           axisLabelUseCanvas: true,
           axisLabelFontSizePixels: 12,
           axisLabelFontFamily: 'Verdana, Arial',
-          axisLabelPadding: 10
+          axisLabelPadding: 10,
+
+          // X axis time formatting
+          mode: "time",
+          timeformat: "%d %b %H:%M",
+          minTickSize: [1, "minute"]
         },
 
         series: {
