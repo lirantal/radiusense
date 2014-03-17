@@ -7,6 +7,22 @@ var mongoose = require('mongoose'),
     Servers = mongoose.model('Servers'),
     _ = require('lodash');
 
+var radiusClient = require('./radius');
+
+/**
+ * Iterate the servers collection and trigger statistics harvesting
+ * for each server
+ */
+exports.harvest = function(req, res, next) {
+    Servers.find({}).exec(function(err, servers){
+        servers.forEach(function(server) {
+            radiusClient.StatusPing(server);
+        });
+    });
+    next();
+}
+
+
 /**
  * Find server by id
  */
