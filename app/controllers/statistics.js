@@ -58,7 +58,8 @@ exports.freeradiusWeeklyaccountingRequests = function(req, res) {
             {
                 $match: {
                     server: req.server._id,
-                    user: req.user._id
+                    user: req.user._id,
+                    created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
                 }
 
             },
@@ -106,7 +107,8 @@ exports.freeradiusWeeklyaccountingRequests = function(req, res) {
             {
                 $match: {
                     server: req.server._id,
-                    user: req.user._id
+                    user: req.user._id,
+                    created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
                 }
 
             },
@@ -149,19 +151,21 @@ exports.freeradiusWeeklyAccessRequests = function(req, res) {
             {
                 $match: {
                     server: req.server._id,
-                    user: req.user._id
+                    user: req.user._id,
+                    created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
                 }
 
             },
             {
                 $project: { 
-                    day: { $dayOfWeek: "$created" },
+                    day: { $dayOfMonth: "$created" },
                     "freeradiusStatistics": 1,
+                    "created": 1
                 }
             },
             {
                 $group: {
-                    _id: "$day",
+                    _id: "$created",
                     "max": {
                         "$max": "$freeradiusStatistics.FreeRADIUS-Total-Access-Requests"
                     }
@@ -189,19 +193,21 @@ exports.freeradiusWeeklyAccessRequests = function(req, res) {
             {
                 $match: {
                     server: req.server._id,
-                    user: req.user._id
+                    user: req.user._id,
+                    created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
                 }
 
             },
             {
                 $project: { 
-                    day: { $dayOfWeek: "$created" },
+                    day: { $dayOfMonth: "$created" },
                     "freeradiusStatistics": 1,
+                    "created": 1
                 }
             },
             {
                 $group: {
-                    _id: "$day",
+                    _id: "$created",
                     "max": {
                         "$max": "$freeradiusStatistics.FreeRADIUS-Total-Access-Accepts"
                     }
@@ -229,19 +235,21 @@ exports.freeradiusWeeklyAccessRequests = function(req, res) {
             {
                 $match: {
                     server: req.server._id,
-                    user: req.user._id
+                    user: req.user._id,
+                    created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
                 }
 
             },
             {
                 $project: { 
-                    day: { $dayOfWeek: "$created" },
+                    day: { $dayOfMonth: "$created" },
                     "freeradiusStatistics": 1,
+                    "created": 1
                 }
             },
             {
                 $group: {
-                    _id: "$day",
+                    _id: "$created",
                     "max": {
                         "$max": "$freeradiusStatistics.FreeRADIUS-Total-Access-Rejects"
                     }
