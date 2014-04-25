@@ -6,14 +6,23 @@ var mongoose = require('mongoose'),
 
 exports.render = function(req, res) {
 
-	Servers.loadSingle(req.user._id, function(err, server) {
+Servers.loadSingle(req.user._id, function(err, server) {
 
+	if (server) {
 		res.render('index', {
-	    	user: function user() {
-	    		return req.user ? JSON.stringify(req.user) : 'null'
-	    	},
-	    	serverId: server._id.toString(),
-	    	server: server
-    	})
-	})
+		    	user: function user() {
+		    		return req.user ? JSON.stringify(req.user) : 'null'
+		    	},
+		    	serverId: server._id.toString(),
+		    	server: server
+	    	});
+	} else {
+		res.render('index', {
+		    	user: function user() {
+		    		return req.user ? JSON.stringify(req.user) : 'null'
+		    	}
+		});
+	}
+
+	});
 };
