@@ -43,8 +43,19 @@ exports.create = function(req, res) {
     server.user = req.user;
   
     // Make sure the user has already at least one entry in the database
-    // and if so then we don't allow them to create another server instance
-    Servers.findOne({"user" : req.user.id}).exec(function(err, serverFound) {
+    // and if so then we don't allow them to create another server instance.
+    // Also validate and confirm that the user can't add an entry for an
+    // already created IP address as this could be then spoofed or used for
+    // DOS attacks
+    Servers.findOne(
+        {
+            $or: [
+                {"user" : req.user.id},
+                {"radius.address": server.radius.address}
+            ]
+            
+        }
+        ).exec(function(err, serverFound) {
         if (err)
             res.jsonp(
                 500,
@@ -75,16 +86,38 @@ exports.update = function(req, res) {
 
     server = _.extend(server, req.body);
 
-    server.save(function(err) {
-        if (err) {
-            return res.jsonp(
+    Servers.findOne(
+        {
+            $and: [
+                {"user" : { $ne: req.user.id } },
+                {"radius.address": server.radius.address}
+            ]
+        }
+        ).exec(function(err, serverFound) {
+        if (err)
+            res.jsonp(
                 500,
-                {"error": err.message}
+                {"error" : "unable to fetch database records"}
+            );
+        else if (serverFound) {
+            res.jsonp(
+                500,
+                {"error" : "you are only allowed to create one server instance of the same radius address"}
             );
         } else {
-            res.jsonp(server);
+            server.save(function(err) {
+                if (err) {
+                    return res.jsonp(
+                        500,
+                        {"error": err.message}
+                    );
+                } else {
+                    res.jsonp(server);
+                }
+            });
         }
     });
+
 };
 
 /**
