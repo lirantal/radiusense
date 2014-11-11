@@ -53,7 +53,7 @@ var Servers = new Schema({
  * Hooking a pre save middleware
  */
 Servers.pre('save', function(next) {
-  this.updated = new Date;
+  this.updated = new Date();
   next();
 });
 

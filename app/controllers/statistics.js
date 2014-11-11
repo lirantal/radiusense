@@ -3,46 +3,45 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose'),
-    Statistics = mongoose.model('Statistics'),
-    _ = require('lodash');
+ var mongoose = require('mongoose'),
+ Statistics = mongoose.model('Statistics'),
+ _ = require('lodash');
 
 /**
  * Find statistics by id
  */
 exports.statistics = function(req, res, next, id) {
-    Servers.load(id, function(err, statistics) {
-        if (err) return next(err);
-        if (!statistics) return next(new Error('Failed to load statistics ' + id));
-        req.statistics = statistics;
-        next();
-    });
+  Servers.load(id, function(err, statistics) {
+    if (err) return next(err);
+    if (!statistics) return next(new Error('Failed to load statistics ' + id));
+    req.statistics = statistics;
+    next();
+  });
 };
 
 /**
  * Get the latest freeradius status information for the given server
  */
-exports.freeradiusUptime = function(req, res) {
+ exports.freeradiusUptime = function(req, res) {
 
-    Statistics.findOne(
-        {
-            server: req.server._id,
-            user: req.user._id
-        }
-    ).sort({created: -1}).exec(function(err, stat) {
-        if (err) {
-            return res.jsonp(
-                500,
-                {"error": err.message}
-            );
-        } else {
-            res.jsonp(
-                200,
-                stat
-            );
-        }
-
-    });
+  Statistics.findOne(
+  {
+    server: req.server._id,
+    user: req.user._id
+  }
+  ).sort({created: -1}).exec(function(err, stat) {
+    if (err) {
+      return res.jsonp(
+        500,
+        {'error': err.message}
+      );
+    } else {
+      res.jsonp(
+        200,
+        stat
+      );
+    }
+  });
 };
 
 
@@ -50,221 +49,220 @@ exports.freeradiusUptime = function(req, res) {
 
 exports.freeradiusWeeklyAccountingRequests = function(req, res) {
 
-    var _data = {};
+  var _data = {};
 
-    var accountingRequestsTypes = function() {
-        Statistics.aggregate(
-        [
-            {
-                $match: {
-                    server: req.server._id,
-                    user: req.user._id,
-                    created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
-                }
-
-            },
-            {
-                $project: { 
-                    day: { $dayOfWeek: "$created" },
-                    "freeradiusStatistics": 1,
-                }
-            },
-            {
-                $group: {
-                    _id: "$day",
-                    "maxAcctMalformedRequests": {
-                        "$max": "$freeradiusStatistics.FreeRADIUS-Total-Acct-Malformed-Requests"
-                    },
-                    "maxAcctInvalidRequests": {
-                        "$max": "$freeradiusStatistics.FreeRADIUS-Total-Acct-Invalid-Requests"
-                    },
-                    "maxAcctDroppedRequests": {
-                        "$max": "$freeradiusStatistics.FreeRADIUS-Total-Acct-Dropped-Requests"
-                    },
-                    "maxAcctUnknownTypes": {
-                        "$max": "$freeradiusStatistics.FreeRADIUS-Total-Acct-Unknown-Types"
-                    }
-                }
-            },
-            {
-                $sort: {
-                    "_id": 1
-                }
-            }
-        ],
-        function(err, docs) {
-            if (err) throw err;
-
-            _data.accountingRequestsTypes = docs;
-            return res.jsonp(_data);
-        });
-
-    };
-
-    // Get accounting requests
+  var accountingRequestsTypes = function() {
     Statistics.aggregate(
-        [
-            {
-                $match: {
-                    server: req.server._id,
-                    user: req.user._id,
-                    created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
-                }
-
-            },
-            {
-                $project: { 
-                    day: { $dayOfWeek: "$created" },
-                    "freeradiusStatistics": 1,
-                }
-            },
-            {
-                $group: {
-                    _id: "$day",
-                    "max": {
-                        "$max": "$freeradiusStatistics.FreeRADIUS-Total-Accounting-Requests"
-                    }
-                }
-            },
-            {
-                $sort: {
-                    "_id": 1
-                }
-            }
-        ],
-    function(err, docs) {
+      [
+      {
+        $match: {
+          server: req.server._id,
+          user: req.user._id,
+          created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
+        }
+      },
+      {
+        $project: { 
+          day: { $dayOfWeek: "$created" },
+          'freeradiusStatistics': 1,
+        }
+      },
+      {
+        $group: {
+          _id: "$day",
+          'maxAcctMalformedRequests': {
+            "$max": "$freeradiusStatistics.FreeRADIUS-Total-Acct-Malformed-Requests"
+          },
+          'maxAcctInvalidRequests': {
+            "$max": "$freeradiusStatistics.FreeRADIUS-Total-Acct-Invalid-Requests"
+          },
+          'maxAcctDroppedRequests': {
+            "$max": "$freeradiusStatistics.FreeRADIUS-Total-Acct-Dropped-Requests"
+          },
+          'maxAcctUnknownTypes': {
+            "$max": "$freeradiusStatistics.FreeRADIUS-Total-Acct-Unknown-Types"
+          }
+        }
+      },
+      {
+        $sort: {
+          '_id': 1
+        }
+      }
+      ],
+      function(err, docs) {
         if (err) throw err;
-        _data.accountingRequests = docs;
-        return accountingRequestsTypes();
-    });
+
+        _data.accountingRequestsTypes = docs;
+        return res.jsonp(_data);
+      }
+    );
+  };
+
+  // Get accounting requests
+  Statistics.aggregate(
+    [
+      {
+        $match: {
+          server: req.server._id,
+          user: req.user._id,
+          created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
+        }
+      },
+      {
+        $project: { 
+          day: { $dayOfWeek: "$created" },
+          'freeradiusStatistics': 1,
+        }
+      },
+      {
+        $group: {
+          _id: "$day",
+          'max': {
+            "$max": "$freeradiusStatistics.FreeRADIUS-Total-Accounting-Requests"
+          }
+        }
+      },
+      {
+        $sort: {
+          '_id': 1
+        }
+      }
+    ],
+    function(err, docs) {
+      if (err) throw err;
+      
+      _data.accountingRequests = docs;
+      return accountingRequestsTypes();
+    }
+  );
 };
 
 
 
 exports.freeradiusWeeklyAccessRequests = function(req, res) {
 
-    var _data = {};
+  var _data = {};
 
-    var accessRequests = function() {
-        Statistics.aggregate(
-        [
-            {
-                $match: {
-                    server: req.server._id,
-                    user: req.user._id,
-                    created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
-                }
-
-            },
-            {
-                $project: { 
-                    day: { $dayOfMonth: "$created" },
-                    "freeradiusStatistics": 1,
-                    "created": 1
-                }
-            },
-            {
-                $group: {
-                    _id: "$created",
-                    "max": {
-                        "$max": "$freeradiusStatistics.FreeRADIUS-Total-Access-Requests"
-                    }
-                }
-            },
-            {
-                $sort: {
-                    "_id": 1
-                }
-            }
-        ],
-        function(err, docs) {
-            if (err) throw err;
-
-            _data.accessRequests = docs;
-            return res.jsonp(_data);
-        });
-
-    };
-
-    // Get access accepts
-    var accessAccepts = function() {
-        Statistics.aggregate(
-        [
-            {
-                $match: {
-                    server: req.server._id,
-                    user: req.user._id,
-                    created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
-                }
-
-            },
-            {
-                $project: { 
-                    day: { $dayOfMonth: "$created" },
-                    "freeradiusStatistics": 1,
-                    "created": 1
-                }
-            },
-            {
-                $group: {
-                    _id: "$created",
-                    "max": {
-                        "$max": "$freeradiusStatistics.FreeRADIUS-Total-Access-Accepts"
-                    }
-                }
-            },
-            {
-                $sort: {
-                    "_id": 1
-                }
-            }
-        ],
-        function(err, docs) {
-            if (err) throw err;
-
-            _data.accessAccepts = docs;
-            return accessRequests();
-        });
-
-    };
-
-
-    // Get access rejects
+  var accessRequests = function() {
     Statistics.aggregate(
-        [
-            {
-                $match: {
-                    server: req.server._id,
-                    user: req.user._id,
-                    created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
-                }
-
-            },
-            {
-                $project: { 
-                    day: { $dayOfMonth: "$created" },
-                    "freeradiusStatistics": 1,
-                    "created": 1
-                }
-            },
-            {
-                $group: {
-                    _id: "$created",
-                    "max": {
-                        "$max": "$freeradiusStatistics.FreeRADIUS-Total-Access-Rejects"
-                    }
-                }
-            },
-            {
-                $sort: {
-                    "_id": 1
-                }
+      [
+        {
+          $match: {
+            server: req.server._id,
+            user: req.user._id,
+            created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
+          }
+        },
+        {
+          $project: { 
+            day: { $dayOfMonth: "$created" },
+            'freeradiusStatistics': 1,
+            'created': 1
+          }
+        },
+        {
+          $group: {
+            _id: "$created",
+            'max': {
+              "$max": "$freeradiusStatistics.FreeRADIUS-Total-Access-Requests"
             }
-        ],
-    function(err, docs) {
+          }
+        },
+        {
+          $sort: {
+            '_id': 1
+          }
+        }
+      ],
+      function(err, docs) {
         if (err) throw err;
-        _data.accessRejects = docs;
-        return accessAccepts();
-    });
 
+        _data.accessRequests = docs;
+        return res.jsonp(_data);
+      }
+    );
+  };
+
+  // Get access accepts
+  var accessAccepts = function() {
+    Statistics.aggregate(
+      [
+        {
+          $match: {
+            server: req.server._id,
+            user: req.user._id,
+            created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
+          }
+
+        },
+        {
+          $project: { 
+            day: { $dayOfMonth: "$created" },
+            "freeradiusStatistics": 1,
+            "created": 1
+          }
+        },
+        {
+          $group: {
+            _id: "$created",
+            'max': {
+              "$max": "$freeradiusStatistics.FreeRADIUS-Total-Access-Accepts"
+            }
+          }
+        },
+        {
+          $sort: {
+            '_id': 1
+          }
+        }
+      ],
+      function(err, docs) {
+        if (err) throw err;
+
+        _data.accessAccepts = docs;
+        return accessRequests();
+      }
+    );
+  };
+
+
+  // Get access rejects
+  Statistics.aggregate(
+    [
+      {
+        $match: {
+          server: req.server._id,
+          user: req.user._id,
+          created: {$gte: new Date(new Date().setDate(new Date().getDate() - 7)), $lte: new Date()}
+        }
+      },
+      {
+        $project: { 
+          day: { $dayOfMonth: "$created" },
+          'freeradiusStatistics': 1,
+          'created': 1
+        }
+      },
+      {
+        $group: {
+          _id: "$created",
+          'max': {
+            "$max": "$freeradiusStatistics.FreeRADIUS-Total-Access-Rejects"
+          }
+        }
+      },
+      {
+        $sort: {
+          '_id': 1
+        }
+      }
+    ],
+    function(err, docs) {
+      if (err) throw err;
+      
+      _data.accessRejects = docs;
+      return accessAccepts();
+    }
+  );
 };

@@ -4,11 +4,11 @@ function serversController($scope, $http) {
 
 	// Set default server object structure
 	$scope.server = {
-		title: "",
+		title: '',
 		radius: {
-			address: "",
-			port: "",
-			secret: ""
+			address: '',
+			port: '',
+			secret: ''
 		}
 	};
 
@@ -16,7 +16,7 @@ function serversController($scope, $http) {
 	$http.get('/servers')
 		.success(function(data) {
 			// Validate data before we popuplate our bounded object
-			if (data && typeof data == "object") {
+			if (data && typeof data == 'object') {
 				$scope.server = data;
 			}
 		})
@@ -31,11 +31,11 @@ function serversController($scope, $http) {
 
 		// Prepare request to create or update 
 		var body = {
-			"title": this.server.title,
-			"radius": {
-				"address": this.server.radius.address,
-				"port": this.server.radius.port,
-				"secret": this.server.radius.secret
+			'title': this.server.title,
+			'radius': {
+				'address': this.server.radius.address,
+				'port': this.server.radius.port,
+				'secret': this.server.radius.secret
 			}
 		};
 
@@ -49,26 +49,26 @@ function serversController($scope, $http) {
 				})
 				.error(function(data) {
 					$scope.message = {
-						status: "warning",
+						status: 'warning',
 						info: data
 					};
-				})
+				});
 			} else {
 				// Update existing RADIUS server instance
 				$http.put('/servers/' + serverId, body)
 				.success(function(data) {
 					$scope.server = data;
 					$scope.message = {
-						status: "success",
-						info: "Settings updated!"
+						status: 'success',
+						info: 'Settings updated!'
 					};
 				})
 				.error(function(data) {
 					$scope.message = {
-						status: "warning",
+						status: 'warning',
 						info: data
 					};
-				})
+				});
 			}
 	};
 }
