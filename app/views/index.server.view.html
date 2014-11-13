@@ -1,5 +1,376 @@
-{% extends 'layout.server.view.html' %}
+{% extends 'layouts/layout-app.html' %}
 
 {% block content %}
-	<section data-ui-view></section>
+    <div class="mainbar">
+      
+      <!-- Page heading -->
+      <div class="page-head">
+        <!-- Page heading -->
+          <h2 class="pull-left">Dashboard 
+        <!-- page meta -->
+        <span class="page-meta"></span>
+      </h2>
+
+
+      <!-- Breadcrumb -->
+      <div class="bread-crumb pull-right">
+        <a href="/"><i class="icon-home"></i> Home</a> 
+        <!-- Divider -->
+        <span class="divider">/</span> 
+        <a href="/" class="bread-current">Dashboard</a>
+      </div>
+
+      <div class="clearfix"></div>
+
+      </div>
+      <!-- Page heading ends -->
+
+
+
+      <!-- Matter -->
+
+      <div class="matter">
+        <div class="container">
+
+          <!-- Today status. jQuery Sparkline plugin used. -->
+
+          <div class="row">
+            <div class="col-md-12"> 
+              <!-- List starts -->
+              <ul class="today-datas">
+
+
+                <!-- Access Accepts #1 -->
+                <li class="bgreen">
+                  <!-- Graph -->
+                  <div class="pull-left"><span id="accessAccepts-sparkline" class="spark"></span></div>
+                  <!-- Text -->
+                  <div class="datas-text pull-right"><span class="bold" id="accessAccepts-sum">0</span> Access-Accepts/Weekly</div>
+
+                  <div class="clearfix"></div>
+                </li>
+
+                <!-- Access Rejects #1 -->
+                <li class="bred">
+                  <!-- Graph -->
+                  <div class="pull-left"><span id="accessRejects-sparkline" class="spark"></span></div>
+                  <!-- Text -->
+                  <div class="datas-text pull-right"><span class="bold" id="accessRejects-sum">0</span> Access-Rejects/Weekly</div>
+
+                  <div class="clearfix"></div>
+                </li>
+
+                <!-- Accounting Requests #1 -->
+                <li class="bgreen">
+                  <!-- Graph -->
+                  <div class="pull-left"><span id="accountingRequests-sparkline" class="spark"></span></div>
+                  <!-- Text -->
+                  <div class="datas-text pull-right"><span class="bold" id="accountingRequests-sum">0</span> Accounting-Requests/Weekly</div>
+
+                  <div class="clearfix"></div>
+                </li>
+
+                <!-- Accounting Bad Requests #1 -->
+                <li class="bred">
+                  <!-- Graph -->
+                  <div class="pull-left"><span id="accountingBadRequests-sparkline" class="spark"></span></div>
+                  <!-- Text -->
+                  <div class="datas-text pull-right"><span class="bold" id="accountingBadRequests-sum">0</span> Accounting Bad Requests/Weekly</div>
+
+                  <div class="clearfix"></div>
+                </li>
+
+              </ul> 
+            </div>
+          </div>
+
+          <!-- Today status ends -->
+
+          <!-- Dashboard Graph starts -->
+
+          <div class="row">
+            <div class="col-md-12">
+
+              <!-- Widget -->
+              <div class="widget wlightblue">
+                <!-- Widget head -->
+                <div class="widget-head">
+                  <div class="pull-left">Incoming Access Requests Distribution / per week</div>
+                  <div class="widget-icons pull-right">
+                    <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                    <a href="#" class="wclose"><i class="icon-remove"></i></a>
+                  </div>
+                  <div class="clearfix"></div>
+                </div>             
+
+                <!-- Widget content -->
+                <div class="widget-content">
+                  <div class="padd">
+
+                    <!-- Bar chart (Blue color). jQuery Flot plugin used. -->
+                    <div id="bar-chart"></div>
+
+
+                  </div>
+                </div>
+                <!-- Widget ends -->
+
+              </div>
+            </div>
+
+          </div>
+          <!-- Dashboard graph ends -->
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+
+{% block assets_footer_post %}
+
+<script type="text/javascript">
+  window.user = {{user()}};
+  window.serverId = '{{ server._id | safe }}';
+</script>
+
+<!-- Script for this page -->
+<script type="text/javascript">
+$(document).ready(function(){
+
+
+  getAccountingRequests();
+  function getAccountingRequests() {
+    $.ajax({
+      url: "/statistics/freeradius/accountingRequests/" + window.serverId,
+      type: "GET",
+      cache: false
+    }).success(function (data) {
+
+        // populate widgets data
+        widgetAccountingRequests(data.accountingRequests);
+        widgetAccountingBadRequests(data.accountingRequestsTypes);
+
+        // populate charts data
+        //chartAccountingRequests(data);
+    });
+
+  }
+
+
+  function widgetAccountingRequests(data) {
+    var dataPoints = new Array();
+    if (data && data.length > 0) {
+
+      data.forEach(function(dataPoint) {
+        dataPoints.push(dataPoint.max);
+      });
+
+      // Sparkline - accessRequests
+      $("#accountingRequests-sparkline").sparkline(
+        dataPoints, 
+        {
+          type: 'bar',
+          height: '50',
+          barWidth: 7,
+          barColor: '#fff'
+        }
+      );
+
+      // Because FreeRADIUS statistics are accumulative, the last
+      // member in the array is the cumulative sum of the last day
+      // in the requested period
+      var accessRequestsSum = dataPoints[dataPoints.length - 1];
+      if (accessRequestsSum && accessRequestsSum > 0)
+        $("#accountingRequests-sum").text(accessRequestsSum);
+    }
+  }
+
+  function widgetAccountingBadRequests(data) {
+    var dataPoints = new Array();
+    if (data && data.length > 0) {
+
+      data.forEach(function(dataPoint) {
+        dataPoints.push(
+          dataPoint.maxAcctMalformedRequests + 
+          dataPoint.maxAcctInvalidRequests + 
+          dataPoint.maxAcctDroppedRequests + 
+          dataPoint.maxAcctUnknownTypes
+        );
+      });
+
+      // Sparkline - accessRequests
+      $("#accountingBadRequests-sparkline").sparkline(
+        dataPoints, 
+        {
+          type: 'bar',
+          height: '50',
+          barWidth: 7,
+          barColor: '#fff'
+        }
+      );
+
+      // Because FreeRADIUS statistics are accumulative, the last
+      // member in the array is the cumulative sum of the last day
+      // in the requested period
+      var accessRequestsSum = dataPoints[dataPoints.length - 1];
+      if (accessRequestsSum && accessRequestsSum > 0)
+        $("#accountingBadRequests-sum").text(accessRequestsSum);
+    }
+  }
+
+
+
+
+
+
+
+
+  getAccessRequests();
+  function getAccessRequests() {
+    $.ajax({
+      url: "/statistics/freeradius/accessRequests/" + window.serverId,
+      type: "GET",
+      cache: false
+    }).success(function (data) {
+
+        // populate widgets data
+        widgetAccessAccept(data.accessAccepts);
+        widgetAccessReject(data.accessRejects);
+
+        // populate charts data
+        chartAccessRequests(data);
+    });
+
+  }
+
+
+  function widgetAccessReject(data) {
+    var dataPoints = new Array();
+    if (data && data.length > 0) {
+
+      data.forEach(function(dataPoint) {
+        dataPoints.push(dataPoint.max);
+      });
+
+      // Sparkline - accessRequests
+      $("#accessRejects-sparkline").sparkline(
+        dataPoints, 
+        {
+          type: 'bar',
+          height: '50',
+          barWidth: 7,
+          barColor: '#fff'
+        }
+      );
+
+      // Because FreeRADIUS statistics are accumulative, the last
+      // member in the array is the cumulative sum of the last day
+      // in the requested period
+      var accessRequestsSum = dataPoints[dataPoints.length - 1];
+      if (accessRequestsSum && accessRequestsSum > 0)
+        $("#accessRejects-sum").text(accessRequestsSum);
+    }
+  }
+
+
+  function widgetAccessAccept(data) {
+    var dataPoints = new Array();
+    if (data && data.length > 0) {
+
+      data.forEach(function(dataPoint) {
+        dataPoints.push(dataPoint.max);
+      });
+
+      // Sparkline - accessRequests
+      $("#accessAccepts-sparkline").sparkline(
+        dataPoints, 
+        {
+          type: 'bar',
+          height: '50',
+          barWidth: 7,
+          barColor: '#fff'
+        }
+      );
+
+      // Because FreeRADIUS statistics are accumulative, the last
+      // member in the array is the cumulative sum of the last day
+      // in the requested period
+      // if (dataPointMax)
+      //   $("#accessAccepts-sum").text(dataPointMax);
+      var accessRequestsSum = dataPoints[dataPoints.length - 1];
+      if (accessRequestsSum && accessRequestsSum > 0)
+        $("#accessAccepts-sum").text(accessRequestsSum);
+
+      return dataPoints;
+    }
+  }
+
+
+  function chartAccessRequests(data) {
+
+    var accessRequests = [];
+    data.accessRequests.forEach(function(dataPoint) {
+      accessRequests.push([new Date(dataPoint._id).getTime(), dataPoint.max]);
+    });
+
+    var accessAccepts = [];
+    data.accessAccepts.forEach(function(dataPoint) {
+      accessAccepts.push([new Date(dataPoint._id).getTime(), dataPoint.max]);
+    });
+
+    var accessRejects = [];
+    data.accessRejects.forEach(function(dataPoint) {
+      accessRejects.push([new Date(dataPoint._id).getTime(), dataPoint.max]);
+    });
+
+    var dataset = [
+      {label: 'Access-Requests', data: accessRequests, color: "#52b9e9"},
+      {label: 'Access-Accepts', data: accessAccepts, color: "#43c83c"},
+      {label: 'Access-Rejects', data: accessRejects, color: "#fa3031"}
+    ];
+
+    $.plot($("#bar-chart"), dataset, {
+        
+        yaxis: {
+          axisLabel: 'Hits',
+          axisLabelUseCanvas: true,
+          axisLabelFontSizePixels: 12,
+          axisLabelFontFamily: 'Verdana, Arial',
+          axisLabelPadding: 10
+        },
+
+        xaxis: {
+          axisLabel: 'Day of Week',
+          axisLabelUseCanvas: true,
+          axisLabelFontSizePixels: 12,
+          axisLabelFontFamily: 'Verdana, Arial',
+          axisLabelPadding: 10,
+
+          // X axis time formatting
+          mode: "time",
+          timeformat: "%d %b %H:%M",
+          minTickSize: [1, "minute"]
+        },
+
+        series: {
+            lines: { show: true, fill: false, steps: false },
+            points: { show: true, fill: true, radius: 3 }
+        },
+
+        grid: {
+          clickable: true, borderWidth: 0, hoverable: true, color: "#777"
+        },
+        
+        legend: {
+          labelBoxBorderColor: "none",
+          position: "nw"
+        },
+
+    });
+
+  }
+
+});
+
+</script>
 {% endblock %}

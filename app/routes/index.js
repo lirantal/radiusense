@@ -1,13 +1,18 @@
 'use strict';
 
-module.exports = function(app, passport) {  
+module.exports = function(app) {  
 
-  // Home route
-  var index = require('../controllers/index');
+  // Home page controller
+  var index = require('../../app/controllers/index.server.controller');
+  // Users authorization related controllers
+  var users = require('../../app/controllers/users.server.controller');
 
+  //app.route('/').get(core.index);
   app.get('/', function (req, res, next) {
     if (!req.isAuthenticated()) {
-      res.redirect('/users/signin');
+      res.render('users/signin', {
+      	title: 'Sign in'
+      });
     } else {
       index.render(req, res, next);
     }
