@@ -23,13 +23,20 @@
                   
                   <form class="form-horizontal" method="post" action="/auth/signup">
                     <!-- Registration form starts -->
-                    <!-- Name -->
+                        <!-- firstName -->
                         <div class="form-group">
-                          <label class="control-label col-lg-3" for="name">Name</label>
+                          <label class="control-label col-lg-3" for="name">First Name</label>
                           <div class="col-lg-9">
-                            <input type="text" class="form-control" id="name" name="name" value="{{user.name}}">
+                            <input type="text" class="form-control" id="firstName" name="firstName" value="{{user.firstName}}">
                           </div>
-                        </div>   
+                        </div>
+                        <!-- lastName -->
+                        <div class="form-group">
+                          <label class="control-label col-lg-3" for="name">Last Name</label>
+                          <div class="col-lg-9">
+                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{user.lastName}}">
+                          </div>
+                        </div>
                         <!-- Email -->
                         <div class="form-group">
                           <label class="control-label col-lg-3" for="email">Email</label>
