@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-{% include '../includes/header.html' %}
+{% include './includes/header.html' %}
 
   <body>
 
-  {% include '../includes/navbar-top.html' %}
+  {% include './includes/navbar-top.html' %}
 
     <!-- Main content starts -->
     <div class="content">
@@ -16,7 +16,7 @@
 
             <div class="sidebar-inner">
               <!--- Sidebar navigation -->
-              {% include '../includes/navbar-side.html' %}
+              {% include './includes/navbar-side.html' %}
             </div>
 
         </div>
@@ -36,7 +36,7 @@
     {% block assets_footer_pre %}
     {% endblock %}
 
-    {% include '../includes/footer.html' %}
+    {% include './includes/footer.html' %}
 
     {% block assets_footer_post %}
     {% endblock %}
