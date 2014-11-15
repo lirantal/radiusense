@@ -1,7 +1,7 @@
 'use strict';
 
 // Servers routes use servers controller
-var servers = require('../controllers/servers');
+var servers = require('../controllers/servers.server.controller');
 
 module.exports = function(app, passport) {
 

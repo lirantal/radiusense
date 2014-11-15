@@ -7,7 +7,7 @@ var mongoose = require('mongoose'),
     Servers = mongoose.model('Servers'),
     _ = require('lodash');
 
-var radiusClient = require('./radius');
+var radiusClient = require('./radius.server.controller');
 
 /**
  * Iterate the servers collection and trigger statistics harvesting

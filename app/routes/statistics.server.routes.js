@@ -1,7 +1,7 @@
 'use strict';
 
 // Statistics routes uses statistcs controller
-var statistics = require('../controllers/statistics');
+var statistics = require('../controllers/statistics.server.controller');
 
 module.exports = function(app, passport) {
 
