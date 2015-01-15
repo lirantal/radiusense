@@ -1,0 +1,89 @@
+{% extends '../layout.server.view.html' %}
+
+{% block content %}
+
+<div class="admin-form" ng-app="users_auth" ng-controller="usersSignupController">
+  <div class="container">
+
+  {% raw %}
+  <div class="alert alert-warning" ng-show="message">
+    Oops! {{ message }}
+  </div>
+  {% endraw %}
+
+    <div class="row">
+      <div class="col-lg-12">
+        <!-- Widget starts -->
+            <div class="widget wred">
+              <div class="widget-head">
+                <i class="icon-lock"></i> Register 
+              </div>
+              <div class="widget-content">
+                <div class="padd">
+                  
+                  <form class="form-horizontal ng-pristine ng-valid" autocomplete="off" ng-submit="signup()">
+                    <!-- Registration form starts -->
+                        <!-- firstName -->
+                        <div class="form-group">
+                          <label class="control-label col-lg-3" for="name">First Name</label>
+                          <div class="col-lg-9">
+                            <input type="text" class="form-control" id="firstName" name="firstName" value="{{user.firstName}}" ng-model="credentials.firstName">
+                          </div>
+                        </div>
+                        <!-- lastName -->
+                        <div class="form-group">
+                          <label class="control-label col-lg-3" for="name">Last Name</label>
+                          <div class="col-lg-9">
+                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{user.lastName}}" ng-model="credentials.lastName">
+                          </div>
+                        </div>
+                        <!-- Email -->
+                        <div class="form-group">
+                          <label class="control-label col-lg-3" for="email">Email</label>
+                          <div class="col-lg-9">
+                            <input type="text" class="form-control" id="email" name="email" value="{{user.email}}" ng-model="credentials.email">
+                          </div>
+                        </div>                                          
+                        <!-- Username -->
+                        <div class="form-group">
+                          <label class="control-label col-lg-3" for="username">Username</label>
+                          <div class="col-lg-9">
+                            <input type="text" class="form-control" id="username" name="username" value="{{user.username}}" ng-model="credentials.username">
+                          </div>
+                        </div>
+                        <!-- Password -->
+                        <div class="form-group">
+                          <label class="control-label col-lg-3" for="email">Password</label>
+                          <div class="col-lg-9">
+                            <input type="password" class="form-control" id="password" name="password" ng-model="credentials.password">
+                          </div>
+                        </div>
+                        <!-- Accept box and button s-->
+                        <div class="form-group">
+                          <div class="col-lg-9 col-lg-offset-3">
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox"> Accept Terms &amp; Conditions
+                                </label>
+                            </div>
+                            <br />
+                            <button type="submit" class="btn btn-danger">Register</button>
+                            <button type="reset" class="btn btn-success">Reset</button>
+                          </div>
+                        </div>
+                      <br />
+                  </form>
+
+                </div>
+              </div>
+                <div class="widget-foot">
+                  Already Registred? <a href="/users/signin">Login</a>
+                </div>
+            </div>  
+      </div>
+    </div>
+  </div> 
+</div>
+
+
+{% endblock %}

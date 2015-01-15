@@ -1,0 +1,78 @@
+{% extends '../layout.server.view.html' %}
+
+{% block content %}
+
+<!-- Form area -->
+<div class="admin-form" ng-app="users_auth" ng-controller="usersAuthController">
+  <div class="container">
+
+  {% raw %}
+  <div class="alert alert-warning" ng-show="message">
+    Oops! {{ message }}
+  </div>
+  {% endraw %}
+
+
+    <div class="row ng-scope">
+      <div class="col-md-12">
+        <!-- Widget starts -->
+            <div class="widget worange">
+              <!-- Widget head -->
+              <div class="widget-head">
+                <i class="icon-lock"></i> Login
+              </div>
+
+              <div class="widget-content">
+                <div class="padd">
+
+                  <!-- Login form -->
+                  <form class="form-horizontal ng-pristine ng-valid" autocomplete="off" ng-submit="signin()">
+
+                    <!-- Username -->
+                    <div class="form-group">
+                      <label class="control-label col-lg-3" for="Username">Username</label>
+                      <div class="col-lg-9">
+                        <input type="text" class="form-control" id="Username" placeholder="Username" ng-model="credentials.username" name="username">
+                      </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                      <label class="control-label col-lg-3" for="inputPassword">Password</label>
+                      <div class="col-lg-9">
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Password" ng-model="credentials.password" name="password">
+                      </div>
+                    </div>
+
+                    <!-- Remember me checkbox and sign in button -->
+                    <div class="form-group">
+                      <div class="col-lg-9 col-lg-offset-3">
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox"> Remember me
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-9 col-lg-offset-3">
+                      <button type="submit" class="btn btn-danger">Sign in</button>
+                      <button type="reset" class="btn btn-default">Reset</button>
+                    </div>
+
+                    <br />
+                  </form>
+          
+                </div>
+              </div>
+              
+              <div class="widget-foot">
+                Not Registred? <a href="/users/signup">Register here</a>
+              </div>
+            </div>  
+      </div>
+    </div>
+  </div> 
+</div>
+
+{% endblock %}

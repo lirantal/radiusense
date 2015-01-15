@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <!-- Title and other stuffs -->
+  <title>{{ title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="author" content="">
+
+  <!--Application CSS Files-->
+  {% for cssFile in cssFiles %}
+    <link rel="stylesheet" href="/{{cssFile}}">{% endfor %}
+  
+  <!-- HTML5 Support for IE -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <!-- Favicon -->
+  <link href="/img/favicon/favicon.png" rel="shortcut icon">
+</head>
+
+<body>
+
+  {% block content %}
+  {% endblock %}
+
+	<!--Embedding The User Object-->
+	<script type="text/javascript">
+		var user = {{ user | json | safe }};
+	</script>
+
+	<!--Application JavaScript Files-->
+	{% for jsFile in jsFiles %}
+    <script type="text/javascript" src="/{{jsFile}}"></script>{% endfor %} 
+
+	{% if process.env.NODE_ENV === 'development' %}
+	<!--Livereload script rendered -->
+	<script type="text/javascript" src="http://{{request.hostname}}:35729/livereload.js"></script>
+	{% endif %}
+
+  </body>
+</html>

@@ -1,82 +1,49 @@
 'use strict';
-
 /**
  * Module dependencies.
  */
-var express = require('express'),
-    fs = require('fs'),
-    passport = require('passport'),
-    logger = require('mean-logger');
+var init = require('./config/init')(),
+	config = require('./config/config'),
+	mongoose = require('mongoose'),
+	chalk = require('chalk');
 
 /**
  * Main application entry file.
  * Please note that the order of loading is important.
  */
 
-// Load configurations
-// Set the node enviornment variable if not set before
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-
-// Initializing system variables 
-var config = require('./config/config'),
-    mongoose = require('mongoose');
-
 // Bootstrap db connection
-var db = mongoose.connect(config.db);
+var db = mongoose.connect(config.db.uri, config.db.options, function(err) {
+	if (err) {
+		console.error(chalk.red('Could not connect to MongoDB!'));
+		console.log(chalk.red(err));
+	}
+});
+mongoose.connection.on('error', function(err) {
+	console.error(chalk.red('MongoDB connection error: ' + err));
+	process.exit(-1);
+	}
+);
 
-// Bootstrap models
-var models_path = __dirname + '/app/models';
-var walk = function(path) {
-    fs.readdirSync(path).forEach(function(file) {
-        var newPath = path + '/' + file;
-        var stat = fs.statSync(newPath);
-        if (stat.isFile()) {
-            if (/(.*)\.(js$|coffee$)/.test(file)) {
-                require(newPath);
-            }
-        } else if (stat.isDirectory()) {
-            walk(newPath);
-        }
-    });
-};
-walk(models_path);
+// Init the express application
+var app = require('./config/express')(db);
 
 // Bootstrap passport config
-require('./config/passport')(passport);
-
-var app = express();
-
-// Express settings
-require('./config/express')(app, passport, db);
-
-// Bootstrap routes
-var routes_path = __dirname + '/app/routes';
-var walk = function(path) {
-    fs.readdirSync(path).forEach(function(file) {
-        var newPath = path + '/' + file;
-        var stat = fs.statSync(newPath);
-        if (stat.isFile()) {
-            if (/(.*)\.(js$|coffee$)/.test(file)) {
-                require(newPath)(app, passport);
-            }
-        // We skip the app/routes/middlewares directory as it is meant to be
-        // used and shared by routes as further middlewares and is not a 
-        // route by itself
-        } else if (stat.isDirectory() && file !== 'middlewares') {
-            walk(newPath);
-        }
-    });
-};
-walk(routes_path);
-
+require('./config/passport')();
 
 // Start the app by listening on <port>
-var port = process.env.PORT || config.port;
-app.listen(port);
-console.log('Express app started on port ' + port);
-
-// Initializing logger
-logger.init(app, passport, mongoose);
+app.listen(config.port);
 
 // Expose app
 exports = module.exports = app;
+
+// Logging initialization
+console.log('--');
+console.log(chalk.green(config.app.title + ' application started'));
+console.log(chalk.green('Environment:\t\t\t' + process.env.NODE_ENV));
+console.log(chalk.green('Port:\t\t\t\t' + config.port));
+console.log(chalk.green('Database:\t\t\t' + config.db.uri));
+if (process.env.NODE_ENV === 'secure') {
+	console.log(chalk.green('HTTPs:\t\t\t\ton'));
+}
+console.log('--');

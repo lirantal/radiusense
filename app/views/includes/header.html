@@ -8,42 +8,16 @@
   <meta name="description" content="">
   <meta name="keywords" content="">
   <meta name="author" content="">
-
-
-  <!-- Stylesheets
-  <link rel="stylesheet" href="/lib/bootstrap/docs/assets/css/bootstrap.css" >
-  -->
-  <link rel="stylesheet" href="/css/bootstrap.css" >
   
-
-
-  <!-- Font awesome icon -->
-  <link rel="stylesheet" href="/css/font-awesome.css"> 
-  <!-- jQuery UI -->
-  <link rel="stylesheet" href="/css/jquery-ui.css"> 
-  <!-- Calendar -->
-  <link rel="stylesheet" href="/css/fullcalendar.css">
-  <!-- prettyPhoto -->
-  <link rel="stylesheet" href="/css/prettyPhoto.css">   
-  <!-- Star rating -->
-  <link rel="stylesheet" href="/css/rateit.css">
-  <!-- Date picker -->
-  <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css">
-  <!-- jQuery Gritter -->
-  <link rel="stylesheet" href="/css/jquery.gritter.css">
-  <!-- CLEditor -->
-  <link rel="stylesheet" href="/css/jquery.cleditor.css"> 
-  <!-- Bootstrap toggle -->
-  <link rel="stylesheet" href="/css/bootstrap-switch.css">
-  <!-- Main stylesheet -->
-  <link rel="stylesheet" href="/css/style.css">
-  <!-- Widgets stylesheet -->
-  <link rel="stylesheet" href="/css/widgets.css"> 
- 
+  <!--Application CSS Files-->
+  {% for cssFile in cssFiles %}
+    <link rel="stylesheet" href="/{{cssFile}}">{% endfor %}
+  
   <!-- HTML5 Support for IE -->
   <!--[if lt IE 9]>
-    <script src="/lib/html5shim.js"></script>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
+
 
   <!-- Favicon -->
   <link rel="shortcut icon" href="img/favicon/favicon.png" type="image/x-icon">
