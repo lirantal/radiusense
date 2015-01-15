@@ -12,7 +12,7 @@
   </div>
   {% endif %}
 
-    <div class="row">
+    <div class="row ng-scope" data-ng-controller="AuthenticationController">
       <div class="col-md-12">
         <!-- Widget starts -->
             <div class="widget worange">
@@ -25,13 +25,13 @@
                 <div class="padd">
 
                   <!-- Login form -->
-                  <form class="form-horizontal" method="post" action="/auth/signin">
+                  <form class="form-horizontal ng-pristine ng-valid" autocomplete="off" data-ng-submit="signin()">
 
                     <!-- Username -->
                     <div class="form-group">
                       <label class="control-label col-lg-3" for="Username">Username</label>
                       <div class="col-lg-9">
-                        <input type="text" class="form-control" id="Username" placeholder="Username" name="username">
+                        <input type="text" class="form-control" id="Username" placeholder="Username" data-ng-model="credentials.username" name="username">
                       </div>
                     </div>
 
@@ -39,7 +39,7 @@
                     <div class="form-group">
                       <label class="control-label col-lg-3" for="inputPassword">Password</label>
                       <div class="col-lg-9">
-                        <input type="password" class="form-control" id="inputPassword" placeholder="Password" name="password">
+                        <input type="password" class="form-control" id="inputPassword" placeholder="Password" data-ng-model="credentials.password" name="password">
                       </div>
                     </div>
 

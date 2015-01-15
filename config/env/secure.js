@@ -1,8 +1,14 @@
 'use strict';
 
 module.exports = {
-	port: 443,
-	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost/mean',
+	port: 8443,
+	db: {
+		uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://localhost/mean',
+		options: {
+			user: '',
+			pass: ''
+		}
+	},
 	log: {
 		// Can specify one of 'combined', 'common', 'dev', 'short', 'tiny'
 		format: 'combined',
