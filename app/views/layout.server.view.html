@@ -10,10 +10,9 @@
   <meta name="keywords" content="">
   <meta name="author" content="">
 
-  <!-- Stylesheets -->
-  <link href="/css/bootstrap.css" rel="stylesheet">
-  <link href="/css/font-awesome.css" rel="stylesheet">
-  <link href="/css/style.css" rel="stylesheet">
+  <!--Application CSS Files-->
+  {% for cssFile in cssFiles %}
+    <link rel="stylesheet" href="/{{cssFile}}">{% endfor %}
   
   <!-- HTML5 Support for IE -->
   <!--[if lt IE 9]>
@@ -29,17 +28,14 @@
   {% block content %}
   {% endblock %}
 
-  <!-- JS -->
-  <script src="/lib/jquery/dist/jquery.min.js"></script>
-  <script src="/lib/bootstrap/dist/js/bootstrap.js"></script>
-
 	<!--Embedding The User Object-->
 	<script type="text/javascript">
 		var user = {{ user | json | safe }};
 	</script>
 
 	<!--Application JavaScript Files-->
-	{% for jsFile in jsFiles %}<script type="text/javascript" src="{{jsFile}}"></script>{% endfor %} 
+	{% for jsFile in jsFiles %}
+    <script type="text/javascript" src="/{{jsFile}}"></script>{% endfor %} 
 
 	{% if process.env.NODE_ENV === 'development' %}
 	<!--Livereload script rendered -->
