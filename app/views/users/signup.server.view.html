@@ -2,14 +2,14 @@
 
 {% block content %}
 
-<div class="admin-form">
+<div class="admin-form" ng-app="users_auth" ng-controller="usersSignupController">
   <div class="container">
 
-  {% if message.length %}
-  <div class="alert alert-warning">
+  {% raw %}
+  <div class="alert alert-warning" ng-show="message">
     Oops! {{ message }}
   </div>
-  {% endif %}
+  {% endraw %}
 
     <div class="row">
       <div class="col-lg-12">
@@ -21,41 +21,41 @@
               <div class="widget-content">
                 <div class="padd">
                   
-                  <form class="form-horizontal" method="post" action="/auth/signup">
+                  <form class="form-horizontal ng-pristine ng-valid" autocomplete="off" ng-submit="signup()">
                     <!-- Registration form starts -->
                         <!-- firstName -->
                         <div class="form-group">
                           <label class="control-label col-lg-3" for="name">First Name</label>
                           <div class="col-lg-9">
-                            <input type="text" class="form-control" id="firstName" name="firstName" value="{{user.firstName}}">
+                            <input type="text" class="form-control" id="firstName" name="firstName" value="{{user.firstName}}" ng-model="credentials.firstName">
                           </div>
                         </div>
                         <!-- lastName -->
                         <div class="form-group">
                           <label class="control-label col-lg-3" for="name">Last Name</label>
                           <div class="col-lg-9">
-                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{user.lastName}}">
+                            <input type="text" class="form-control" id="lastName" name="lastName" value="{{user.lastName}}" ng-model="credentials.lastName">
                           </div>
                         </div>
                         <!-- Email -->
                         <div class="form-group">
                           <label class="control-label col-lg-3" for="email">Email</label>
                           <div class="col-lg-9">
-                            <input type="text" class="form-control" id="email" name="email" value="{{user.email}}">
+                            <input type="text" class="form-control" id="email" name="email" value="{{user.email}}" ng-model="credentials.email">
                           </div>
                         </div>                                          
                         <!-- Username -->
                         <div class="form-group">
                           <label class="control-label col-lg-3" for="username">Username</label>
                           <div class="col-lg-9">
-                            <input type="text" class="form-control" id="username" name="username" value="{{user.username}}">
+                            <input type="text" class="form-control" id="username" name="username" value="{{user.username}}" ng-model="credentials.username">
                           </div>
                         </div>
                         <!-- Password -->
                         <div class="form-group">
                           <label class="control-label col-lg-3" for="email">Password</label>
                           <div class="col-lg-9">
-                            <input type="password" class="form-control" id="password" name="password">
+                            <input type="password" class="form-control" id="password" name="password" ng-model="credentials.password">
                           </div>
                         </div>
                         <!-- Accept box and button s-->

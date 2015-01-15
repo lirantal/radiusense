@@ -17,3 +17,24 @@ function usersAuthController($scope, $http) {
 	};
 
 }
+
+function usersSignupController($scope, $http) {
+
+	var credentials = {
+		username: '',
+		password: '',
+		email: '',
+		firstName: '',
+		lastName: ''
+	};
+
+	// Set default server object structure
+	$scope.signup = function() {
+		$http.post('/auth/signup', $scope.credentials).success(function(response) {
+			window.location.href = "/";
+		}).error(function(response) {
+			$scope.message = response.message;
+		});
+	};
+
+}
