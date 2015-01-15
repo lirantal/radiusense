@@ -45,12 +45,24 @@ module.exports = {
 			css: [
 				'public/css/bootstrap.css',
 				'public/css/font-awesome.css',
+				'public/css/jquery-ui.css',
+				'public/css/fullcalendar.css',
+				'public/css/prettyPhoto.css',
+				'public/css/rateit.css',
+				'public/css/bootstrap-datetimepicker.min.css',
+				'public/css/jquery.gritter.css',
+				'public/css/jquery.cleditor.css',
+				'public/css/bootstrap-switch.css',
 				'public/css/style.css',
+				'public/css/widgets.css',
 			],
 			js: [
-				'public/lib/angular/angular.js',
+				
 				'public/lib/jquery/dist/jquery.js',
 				'public/lib/bootstrap/dist/bootstrap.js',
+
+				'public/lib/angular/angular.js',
+				
 				// 'public/lib/angular-resource/angular-resource.js',
 				// 'public/lib/angular-animate/angular-animate.js',
 				// 'public/lib/angular-ui-router/release/angular-ui-router.js',
