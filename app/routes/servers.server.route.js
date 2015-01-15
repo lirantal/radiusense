@@ -9,7 +9,7 @@ module.exports = function(app, passport) {
     app.get('/servers', servers.all);
     app.post('/servers', servers.create);
     app.put('/servers/:serverId', servers.update);
-    app.del('/servers/:serverId', servers.delete);
+    app.delete('/servers/:serverId', servers.delete);
 
     // Route to trigger pinging configured RADIUS servers for their statistics.
     // The URL should be as cryptographic as possible, as otherwise this may
