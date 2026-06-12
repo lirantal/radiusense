@@ -9,8 +9,8 @@
 		"url": "https://github.com/meanjs/mean.git"
 	},
 	"engines": {
-		"node": ">=0.10.28",
-		"npm": ">=1.4.28"
+		"node": ">=24.0.0",
+		"npm": ">=11.10.0"
 	},
 	"scripts": {
 		"start": "grunt",
