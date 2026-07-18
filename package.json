@@ -36,7 +36,7 @@
     "consolidate": "~1.0.4",
     "swig": "~1.4.1",
     "mongoose": "~9.7.1",
-    "passport": "~0.2.0",
+    "passport": "~0.7.0",
     "passport-local": "~1.0.0",
     "passport-facebook": "~3.0.0",
     "passport-twitter": "~1.0.2",
